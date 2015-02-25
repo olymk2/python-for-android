@@ -1,6 +1,6 @@
-export ANDROIDSDK="/home/oly/development/android-sdk-linux"
-export ANDROIDNDK="/home/oly/development/android-ndk-r7"
-export ANDROIDNDKVER=r7
+export ANDROIDSDK="/home/omarks/repos/oly/android-sdk-linux"
+export ANDROIDNDK="/home/omarks/repos/oly/android-ndk-r8c"
+export ANDROIDNDKVER=r8c
 export ANDROIDAPI=14
 
 ./distribute.sh -m "cairo"

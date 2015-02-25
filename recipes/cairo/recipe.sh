@@ -56,17 +56,23 @@ function build_cairo() {
     echo $PKG_CONFIG_PATH
     export CFLAGS="$CFLAGS -I$BUILD_PATH/python-install/include/python2.7 -I$BUILD_PATH/cairo/jni/cairo"
     export CPPFLAGS="$CPPFLAGS -I$BUILD_PATH/python-install/include/python2.7 -I$BUILD_PATH/cairo/jni/cairo"
+    #export LDFLAGS="-lm -ldl -lutil"
     #export PKG_CONFIG_PATH=
     #export LDSHARED=$LIBLINK
-    #export PYTHONPATH=$BUILD_PATH/python-install/lib/python2.7/site-packages
+    export PYTHONPATH=$BUILD_PATH/python-install/lib/python2.7/site-packages
     #export PYTHONPATH=$BUILD_cairo/Lib/site-packages
-    #export PYTHON=/home/oly/repos/oly/python-for-android/build/python/Python-2.7.2/
+    #export PYTHON=$BUILD_PATH/python-install/bin/python2.7
     echo $BUILD_pycairo
     pwd
+    echo 'waf'
     #python ./waf configure
-    try autoreconf -f -i -wall,-Wno-extra-portability,no-obsolete
+    echo 'autoreconf'
+    #try autoreconf -f -i -Wall,no-obsolete
 
-
+    #try autoreconf -f -i -Wall -Wno-extra-portability foreign
+    try autoreconf -f -i -Wall
+    #try autoreconf -f -i
+    autoupdate
 
     echo '########configure'
     echo $BUILD_PATH/python-install
