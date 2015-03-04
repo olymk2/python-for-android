@@ -811,6 +811,7 @@ function run_distribute() {
 	try rm -rf idlelib
 	try rm -rf config/libpython*.a
 	try rm -rf config/python.o
+	try rm -rf lib-dynload/_ctypes_test.so
 	try rm -rf lib-dynload/_testcapi.so
 
 	debug "Strip libraries"

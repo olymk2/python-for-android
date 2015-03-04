@@ -20,6 +20,7 @@ function prebuild_python() {
 	fi
 
 	try patch -p1 < $RECIPE_python/patches/Python-$VERSION_python-xcompile.patch
+        try patch -p1 < $RECIPE_python/patches/Python-$VERSION_python-ctypes-disable-wchar.patch
 	try patch -p1 < $RECIPE_python/patches/disable-modules.patch
 	try patch -p1 < $RECIPE_python/patches/fix-locale.patch
 	try patch -p1 < $RECIPE_python/patches/fix-gethostbyaddr.patch
@@ -92,11 +93,12 @@ function build_python() {
 		export LDFLAGS="$LDFLAGS -L$SRC_PATH/obj/local/$ARCH/"
 	fi
 
-    # CFLAGS for python ctypes library
-    export CFLAGS="$CFLAGS -DNO_MALLINFO"
+	# CFLAGS for python ctypes library
+	export CFLAGS="$CFLAGS -DNO_MALLINFO"
 
-	try ./configure --host=arm-eabi --build=x86_64-linux-gnu OPT=$OFLAG --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
-	echo ./configure --host=arm-eabi --build=x86_64-linux-gnu OPT=$OFLAG --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
+
+	try ./configure --host=arm-eabi OPT=$OFLAG --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
+	echo ./configure --host=arm-eabi  OPT=$OFLAG --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
 	echo $MAKE HOSTPYTHON=$BUILD_python/hostpython HOSTPGEN=$BUILD_python/hostpgen CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so
 	cp HOSTPYTHON=$BUILD_python/hostpython python
 
