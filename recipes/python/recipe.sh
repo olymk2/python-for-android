@@ -20,6 +20,7 @@ function prebuild_python() {
 	fi
 
 	try patch -p1 < $RECIPE_python/patches/Python-$VERSION_python-xcompile.patch
+        try patch -p1 < $RECIPE_python/patches/Python-$VERSION_python-ctypes-disable-wchar.patch
 	try patch -p1 < $RECIPE_python/patches/disable-modules.patch
 	try patch -p1 < $RECIPE_python/patches/fix-locale.patch
 	try patch -p1 < $RECIPE_python/patches/fix-gethostbyaddr.patch

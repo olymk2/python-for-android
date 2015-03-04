@@ -181,10 +181,10 @@ diff -urN Python-2.7.2/setup.py ltib/rpm/BUILD/Python-2.7.2/setup.py
 -                cmd = "cd %s && env CFLAGS='' '%s/configure' %s" \
 -                      % (ffi_builddir, ffi_srcdir, " ".join(config_args))
 +                if self.cross_compile:
-+                    cmd = "cd %s && env CFLAGS='' %s/configure --host=%s --build=%s %s" \
++                    cmd = "cd %s && env CFLAGS='-DNO_MALLINFO=1 -DFFI_MMAP_EXEC_WRIT=1 -DFFI_MMAP_EXEC_SELINUX=0' %s/configure --host=%s --build=%s %s" \
 +                          % (ffi_builddir, ffi_srcdir,
-+                             os.environ.get('HOSTARCH'),
-+                             os.environ.get('BUILDARCH'),
++                             'arm-eabi',
++                             'i486-linux-gnu',
 +                             " ".join(config_args))
 +                else:
 +                    cmd = "cd %s && env CFLAGS='' '%s/configure' %s" \
