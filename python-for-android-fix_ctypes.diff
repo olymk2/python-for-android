@@ -1,0 +1,107 @@
+diff -uNr kivy-python-for-android-51f8025/recipes/python/patches/disable-modules.patch kivy-python-for-android-51f8025-patched6/recipes/python/patches/disable-modules.patch
+--- kivy-python-for-android-51f8025/recipes/python/patches/disable-modules.patch	2012-08-24 15:23:07.000000000 +0200
++++ kivy-python-for-android-51f8025-patched6/recipes/python/patches/disable-modules.patch	2012-08-29 14:54:40.000000000 +0200
+@@ -5,7 +5,7 @@
+  
+  # This global variable is used to hold the list of modules to be disabled.
+ -disabled_module_list = []
+-+disabled_module_list = ['spwd', '_ctypes','bz2','ossaudiodev','_curses','_curses_panel','readline','_locale','_bsddb','gdbm','dbm','nis','linuxaudiodev','crypt','_multiprocessing']
+++disabled_module_list = ['spwd','bz2','ossaudiodev','_curses','_curses_panel','readline','_locale','_bsddb','gdbm','dbm','nis','linuxaudiodev','crypt','_multiprocessing']
+  
+  def add_dir_to_list(dirlist, dir):
+      """Add the directory 'dir' to the list 'dirlist' (at the front) if
+diff -uNr kivy-python-for-android-51f8025/recipes/python/patches/Python-2.7.2-ctypes-disable-wchar.patch kivy-python-for-android-51f8025-patched6/recipes/python/patches/Python-2.7.2-ctypes-disable-wchar.patch
+--- kivy-python-for-android-51f8025/recipes/python/patches/Python-2.7.2-ctypes-disable-wchar.patch	1970-01-01 01:00:00.000000000 +0100
++++ kivy-python-for-android-51f8025-patched6/recipes/python/patches/Python-2.7.2-ctypes-disable-wchar.patch	2012-08-30 13:41:33.000000000 +0200
+@@ -0,0 +1,63 @@
++diff -uNr Python-2.7.2.orig/Lib/ctypes/__init__.py Python-2.7.2/Lib/ctypes/__init__.py
++--- Python-2.7.2.orig/Lib/ctypes/__init__.py	2011-06-11 17:46:24.000000000 +0200
+++++ Python-2.7.2/Lib/ctypes/__init__.py	2012-08-30 13:40:38.837698797 +0200
++@@ -272,31 +272,34 @@
++     else:
++         set_conversion_mode("ascii", "strict")
++ 
++-    class c_wchar_p(_SimpleCData):
++-        _type_ = "Z"
++-
++-    class c_wchar(_SimpleCData):
++-        _type_ = "u"
++-
++-    POINTER(c_wchar).from_param = c_wchar_p.from_param #_SimpleCData.c_wchar_p_from_param
++-
++-    def create_unicode_buffer(init, size=None):
++-        """create_unicode_buffer(aString) -> character array
++-        create_unicode_buffer(anInteger) -> character array
++-        create_unicode_buffer(aString, anInteger) -> character array
++-        """
++-        if isinstance(init, (str, unicode)):
++-            if size is None:
++-                size = len(init)+1
++-            buftype = c_wchar * size
++-            buf = buftype()
++-            buf.value = init
++-            return buf
++-        elif isinstance(init, (int, long)):
++-            buftype = c_wchar * init
++-            buf = buftype()
++-            return buf
++-        raise TypeError(init)
+++# The wchar stuff causes a crash on Android (the bionic C library doesn't
+++# implement wchar_t anyway)
+++#
+++#    class c_wchar_p(_SimpleCData):
+++#        _type_ = "Z"
+++#
+++#    class c_wchar(_SimpleCData):
+++#        _type_ = "u"
+++#
+++#    POINTER(c_wchar).from_param = c_wchar_p.from_param #_SimpleCData.c_wchar_p_from_param
+++#
+++#    def create_unicode_buffer(init, size=None):
+++#        """create_unicode_buffer(aString) -> character array
+++#        create_unicode_buffer(anInteger) -> character array
+++#        create_unicode_buffer(aString, anInteger) -> character array
+++#        """
+++#        if isinstance(init, (str, unicode)):
+++#            if size is None:
+++#                size = len(init)+1
+++#            buftype = c_wchar * size
+++#            buf = buftype()
+++#            buf.value = init
+++#            return buf
+++#        elif isinstance(init, (int, long)):
+++#            buftype = c_wchar * init
+++#            buf = buftype()
+++#            return buf
+++#        raise TypeError(init)
++ 
++ POINTER(c_char).from_param = c_char_p.from_param #_SimpleCData.c_char_p_from_param
++ 
+diff -uNr kivy-python-for-android-51f8025/recipes/python/patches/Python-2.7.2-xcompile.patch kivy-python-for-android-51f8025-patched6/recipes/python/patches/Python-2.7.2-xcompile.patch
+--- kivy-python-for-android-51f8025/recipes/python/patches/Python-2.7.2-xcompile.patch	2012-08-24 15:23:07.000000000 +0200
++++ kivy-python-for-android-51f8025-patched6/recipes/python/patches/Python-2.7.2-xcompile.patch	2012-08-30 15:51:37.000000000 +0200
+@@ -181,10 +181,10 @@
+ -                cmd = "cd %s && env CFLAGS='' '%s/configure' %s" \
+ -                      % (ffi_builddir, ffi_srcdir, " ".join(config_args))
+ +                if self.cross_compile:
+-+                    cmd = "cd %s && env CFLAGS='' %s/configure --host=%s --build=%s %s" \
+++                    cmd = "cd %s && env CFLAGS='-DNO_MALLINFO=1 -DFFI_MMAP_EXEC_WRIT=1 -DFFI_MMAP_EXEC_SELINUX=0' %s/configure --host=%s --build=%s %s" \
+ +                          % (ffi_builddir, ffi_srcdir,
+-+                             os.environ.get('HOSTARCH'),
+-+                             os.environ.get('BUILDARCH'),
+++                             'arm-eabi',
+++                             'i486-linux-gnu',
+ +                             " ".join(config_args))
+ +                else:
+ +                    cmd = "cd %s && env CFLAGS='' '%s/configure' %s" \
+diff -uNr kivy-python-for-android-51f8025/recipes/python/recipe.sh kivy-python-for-android-51f8025-patched6/recipes/python/recipe.sh
+--- kivy-python-for-android-51f8025/recipes/python/recipe.sh	2012-08-24 15:23:07.000000000 +0200
++++ kivy-python-for-android-51f8025-patched6/recipes/python/recipe.sh	2012-08-30 14:24:47.000000000 +0200
+@@ -19,6 +19,7 @@
+ 	fi
+ 
+ 	try patch -p1 < $RECIPE_python/patches/Python-$VERSION_python-xcompile.patch
++        try patch -p1 < $RECIPE_python/patches/Python-$VERSION_python-ctypes-disable-wchar.patch
+ 	try patch -p1 < $RECIPE_python/patches/disable-modules.patch
+ 	try patch -p1 < $RECIPE_python/patches/fix-locale.patch
+ 	try patch -p1 < $RECIPE_python/patches/fix-gethostbyaddr.patch
