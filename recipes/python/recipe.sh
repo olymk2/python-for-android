@@ -95,10 +95,11 @@ function build_python() {
 
 	# CFLAGS for python ctypes library
 	export CFLAGS="$CFLAGS -DNO_MALLINFO"
+	export BUILDARCH=x86_64-linux-gnu
+	export HOSTARCH=arm-eabi
 
-
-	try ./configure --host=arm-eabi OPT=$OFLAG --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
-	echo ./configure --host=arm-eabi  OPT=$OFLAG --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
+	try ./configure --host=$HOSTARCH --build=$BUILDARCH OPT=$OFLAG --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
+	echo ./configure --host=$HOSTARCH --build=$BUILDARCH OPT=$OFLAG --prefix="$BUILD_PATH/python-install" --enable-shared --disable-toolbox-glue --disable-framework
 	echo $MAKE HOSTPYTHON=$BUILD_python/hostpython HOSTPGEN=$BUILD_python/hostpgen CROSS_COMPILE_TARGET=yes INSTSONAME=libpython2.7.so
 	cp HOSTPYTHON=$BUILD_python/hostpython python
 
@@ -126,8 +127,10 @@ function build_python() {
     echo '############copy ctypes'
     cd $BUILD_python
     echo $BUILD_python
+    echo pwd
     echo build/lib.linux-x86_64-2.7/_ctypes*.so
     try cp -a build/lib.linux-x86_64-2.7/_ctypes*.so $LIBS_PATH
+    #exit 0
 
 	# reduce python
 	rm -rf "$BUILD_PATH/python-install/lib/python2.7/test"
