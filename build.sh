@@ -1,7 +1,7 @@
 #https://groups.google.com/forum/?hl=en#!searchin/python-android/ctypes/python-android/vDaaJXNYz_A/eazMVI-DQSYJ
 #/home/oly/.buildozer/android/platform/
 
-export ANDROIDSDK="/home/omarks/.buildozer/android/platform/android-sdk-20"
+export ANDROIDSDK="/home/omarks/.buildozer/android/platform/android-sdk-21"
 export ANDROIDNDK="/home/omarks/.buildozer/android/platform/android-ndk-r9d"
 export ANDROIDNDKVER=r9
 export ANDROIDAPI=14
