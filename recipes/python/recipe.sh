@@ -124,6 +124,14 @@ function build_python() {
 	try cp $BUILD_hostpython/hostpython $HOSTPYTHON
 	try cp libpython2.7.so $LIBS_PATH/
 
+    echo '############copy ctypes'
+    cd $BUILD_python
+    echo $BUILD_python
+    echo pwd
+    echo build/lib.linux-x86_64-2.7/_ctypes*.so
+    try cp -a build/lib.linux-x86_64-2.7/_ctypes*.so $LIBS_PATH
+    #exit 0
+
 	# reduce python
 	rm -rf "$BUILD_PATH/python-install/lib/python2.7/test"
 	rm -rf "$BUILD_PATH/python-install/lib/python2.7/json/tests"
