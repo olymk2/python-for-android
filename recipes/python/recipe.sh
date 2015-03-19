@@ -94,7 +94,7 @@ function build_python() {
 	fi
 
 	# CFLAGS for python ctypes library
-	export CFLAGS="$CFLAGS -DNO_MALLINFO"
+	#export CFLAGS="$CFLAGS -DNO_MALLINFO"
 	export BUILDARCH=x86_64-linux-gnu
 	export HOSTARCH=arm-eabi
 
