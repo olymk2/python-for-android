@@ -32,6 +32,7 @@ function prebuild_python() {
 	try patch -p1 < $RECIPE_python/patches/fix-remove-corefoundation.patch
 	try patch -p1 < $RECIPE_python/patches/fix-dynamic-lookup.patch
 	try patch -p1 < $RECIPE_python/patches/fix-dlfcn.patch
+	try patch -p1 < $RECIPE_python/patches/ctypes-find-library.diff
 
 	system=$(uname -s)
 	if [ "X$system" == "XDarwin" ]; then
