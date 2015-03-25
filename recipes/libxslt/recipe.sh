@@ -26,7 +26,6 @@ function build_libxslt() {
 	cd $BUILD_libxslt
 
 	push_arm
-    try sh autogen.sh
 	try ./configure --build=i686-pc-linux-gnu --host=arm-linux-eabi \
 		--without-plugins --without-debug --without-python --without-crypto \
 		--with-libxml-src=$BUILD_libxml2

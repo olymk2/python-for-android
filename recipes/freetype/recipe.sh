@@ -39,7 +39,7 @@ function build_freetype() {
 	#try make -k CROSS_COMPILE_TARGET=yes INSTSONAME=libfreetype.so#-j4
 	pop_arm
     echo 'finished'
-    try cp -L $BUILD_freetype/objs/.libs/libfreetype.so $LIBS_PATH/libfreetype.so.6
+    #try cp -L $BUILD_freetype/objs/.libs/libfreetype.so $LIBS_PATH/libfreetype.so.6
     try cp -L $BUILD_freetype/objs/.libs/libfreetype.so $LIBS_PATH
 
 }
