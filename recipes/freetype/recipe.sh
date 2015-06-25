@@ -13,11 +13,24 @@ function prebuild_freetype() {
     true
 }
 
+function shouldbuild_harfbuzz() {
+    if [ -f "$BUILD_freetype/objs/.libs/libfreetype.so" ]; then
+        DO_BUILD=0
+    fi
+}
+
 function build_freetype() {
     cd $BUILD_freetype
     push_arm
-    export LDFLAGS="$LDFLAGS -L$BUILD_harfbuzz/src/.libs/"
-    try ./configure --host=arm-linux-androideabi --prefix=$BUILD_freetype --without-zlib --with-png=no --enable-shared
+    #export LDFLAGS="$LDFLAGS -L$BUILD_harfbuzz/src/.libs/"
+    #export LDFLAGS="$LDFLAGS -L$BUILD_harfbuzz/src/"
+    #export LDFLAGS="$LDFLAGS -L$LIBS_PATH"
+    #export CFLAGS="$CFLAGS -I$BUILD_harfbuzz/src/"
+    export HARFBUZZ_CFLAGS="-I$BUILD_harfbuzz/src/"
+    export HARFBUZZ_LIBS="-L$BUILD_harfbuzz/src/.libs/"
+    try ./configure --host=arm-linux-androideabi --prefix=$BUILD_freetype --without-zlib --with-png=no --with-harfbuzz=yes --enable-shared
+    
+    #-nostdinc is breaking but we probably want this
     try make -j5
     pop_arm
 
