@@ -20,13 +20,12 @@ function shouldbuild_harfbuzz() {
 
 function build_harfbuzz() {
     cd $BUILD_harfbuzz
-
     push_arm
-	#~ export LDFLAGS="-L$LIBS_PATH"
-	#~ export LDSHARED="$LIBLINK"
-    #try ./configure --build=i686-pc-linux-gnu --host=arm-linux-androideabi --prefix="$BUILD_PATH/python-install" --enable-shared --without-freetype --without-glib
-    #~ try ./autogen.sh  --build=i686-pc-linux-gnu --host=arm-linux-androideabi --prefix="$BUILD_PATH/python-install" --without-freetype --without-glib
-    try ./configure --without-icu --host=arm-linux-androideabi --prefix="$BUILD_PATH/python-install" --without-freetype --without-glib
+    export CFLAGS="$CFLAGS -I$BUILD_freetype/include"
+    export LDFLAGS="$LDFLAGS -L$LIBS_PATH"
+    #export LDSHARED="$LIBLINK"
+    #try ./autogen.sh
+    try ./configure --build=i686-pc-linux-gnu  --without-icu --host=arm-linux-androideabi --prefix="$BUILD_PATH/python-install" --without-freetype --without-glib  --enable-shared
     try make -j5
     pop_arm
     try cp -L $BUILD_harfbuzz/src/.libs/libharfbuzz.so $LIBS_PATH
@@ -41,12 +40,26 @@ function postbuild_harfbuzz() {
         export CFLAGS="$CFLAGS -I$BUILD_freetype/include"
         #export LDFLAGS="$LDFLAGS -L$LIBS_PATH"
         #export LDSHARED="$LIBLINK"
-        try ./configure --build=i686-pc-linux-gnu  --without-icu --host=arm-linux-androideabi --prefix="$BUILD_PATH/python-install" --without-glib 
+        try ./configure --build=i686-pc-linux-gnu  --without-icu --host=arm-linux-androideabi --prefix="$BUILD_PATH/python-install" --without-glib  --enable-shared
         try make -j5 -nostdinc 
         pop_arm
         echo $LIBS_PATH
         ls $BUILD_harfbuzz/src/.libs
         try cp -L $BUILD_harfbuzz/src/.libs/libharfbuzz.so $LIBS_PATH
+
+        cd $BUILD_freetype
+        push_arm
+        export HARFBUZZ_CFLAGS="-I$BUILD_harfbuzz/src/"
+        export HARFBUZZ_LIBS="-L$BUILD_harfbuzz/src/.libs/"
+        try ./configure --host=arm-linux-androideabi --prefix=$BUILD_freetype --without-zlib --with-png=no --with-harfbuzz=yes --enable-shared
+    
+        #-nostdinc is breaking but we probably want this
+        try make -j5
+        pop_arm
+
+        try cp $BUILD_freetype/objs/.libs/libfreetype.so $LIBS_PATH
+
+
     fi
 }
 

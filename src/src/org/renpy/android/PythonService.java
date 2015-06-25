@@ -91,6 +91,20 @@ public class PythonService extends Service  implements Runnable {
         System.load(getFilesDir() + "/lib/python2.7/lib-dynload/unicodedata.so");
         
         try {
+            System.load("/data/data/org.fabricad.fabricad/lib/libfreetype.so");
+        } catch(UnsatisfiedLinkError e) {
+            Log.e("JNI", "WARNING: Could not load libfreetype" + e);
+            System.exit(1);
+        }
+        
+        try {
+            System.load("/data/data/org.fabricad.fabricad/lib/libharfbuzz.so");
+        } catch(UnsatisfiedLinkError e) {
+            Log.e("JNI", "WARNING: Could not load libharfbuzz.so" + e);
+            System.exit(1);
+        }
+        //FreeLibrary();
+        try {
             System.loadLibrary("ctypes");
             System.load(getFilesDir() + "/lib/python2.7/lib-dynload/_ctypes.so");
         } catch(UnsatisfiedLinkError e) {
