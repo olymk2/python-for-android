@@ -34,7 +34,7 @@ function build_freetype() {
     try make -j5
     pop_arm
 
-    try cp $BUILD_freetype/objs/.libs/libfreetype.so $LIBS_PATH
+    #try cp $BUILD_freetype/objs/.libs/libfreetype.so $LIBS_PATH
 }
 
 # function called after all the compile have been done

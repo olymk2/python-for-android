@@ -28,8 +28,9 @@ function build_harfbuzz() {
     try ./configure --build=i686-pc-linux-gnu  --without-icu --host=arm-linux-androideabi --prefix="$BUILD_PATH/python-install" --without-freetype --without-glib  --enable-shared
     try make -j5
     pop_arm
-    try cp -L $BUILD_harfbuzz/src/.libs/libharfbuzz.so $LIBS_PATH
+    #try cp -L $BUILD_harfbuzz/src/.libs/libharfbuzz.so $LIBS_PATH
 }
+#http://stackoverflow.com/questions/6666805/what-does-each-column-of-objdumps-symbol-table-mean
 
 # function called after all the compile have been done
 function postbuild_harfbuzz() {
@@ -38,9 +39,9 @@ function postbuild_harfbuzz() {
         cd $BUILD_harfbuzz
         push_arm
         export CFLAGS="$CFLAGS -I$BUILD_freetype/include"
-        #export LDFLAGS="$LDFLAGS -L$LIBS_PATH"
-        #export LDSHARED="$LIBLINK"
-        try ./configure --build=i686-pc-linux-gnu  --without-icu --host=arm-linux-androideabi --prefix="$BUILD_PATH/python-install" --without-glib  --enable-shared
+        export LDFLAGS="$LDFLAGS -L$LIBS_PATH -L$BUILD_freetype/objs/.libs/"
+        export LDSHARED="$LIBLINK"
+        try ./configure --build=i686-pc-linux-gnu  --without-icu --host=arm-linux-androideabi --prefix="$BUILD_PATH/python-install" --with-freetype --without-glib  --enable-shared
         try make -j5 -nostdinc 
         pop_arm
         echo $LIBS_PATH
